@@ -27,12 +27,16 @@
 
 <div class="bar">
     <a class="btn"
-       th:if="${hasPrev}"
-       th:href="@{/parcels(page=${page-1}, size=${size}, keyword=${keyword})}">Prev</a>
+       th:if="${hasPrev and page > 0}"
+       th:href="@{/parcels(page=${page - 1}, size=${size}, keyword=${keyword})}">
+        Prev
+    </a>
 
     <a class="btn"
        th:if="${hasNext}"
-       th:href="@{/parcels(page=${page+1}, size=${size}, keyword=${keyword})}">Next</a>
+       th:href="@{/parcels(page=${page + 1}, size=${size}, keyword=${keyword})}">
+        Next
+    </a>
 </div>
 <div class="bar">
     <a class="btn" th:href="@{/parcels/new}">Create New</a>
