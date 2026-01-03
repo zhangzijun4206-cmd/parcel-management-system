@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.at.zijun.mapper.ParcelMapper">
+
+    <resultMap id="ParcelMap" type="com.at.zijun.pojo.Parcel">
+        <id column="id" property="id"/>
+        <result column="tracking_no" property="trackingNo"/>
+        <result column="sender_name" property="senderName"/>
+        <result column="receiver_name" property="receiverName"/>
+        <result column="receiver_phone" property="receiverPhone"/>
+        <result column="address" property="address"/>
+        <result column="status" property="status" javaType="com.at.zijun.pojo.ParcelStatus"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <sql id="BaseColumns">
+        id, tracking_no, sender_name, receiver_name, receiver_phone, address, status, created_at, updated_at
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO parcel (tracking_no, sender_name, receiver_name, receiver_phone, address, status, created_at, updated_at)
+        VALUES (#{trackingNo}, #{senderName}, #{receiverName}, #{receiverPhone}, #{address}, #{status}, NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE parcel
+        SET sender_name = #{senderName},
+        receiver_name = #{receiverName},
+        receiver_phone = #{receiverPhone},
+        address = #{address},
+        status = #{status},
+        updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM parcel WHERE id = #{id}
+    </delete>
+
+    <select id="findById" resultMap="ParcelMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM parcel
+        WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="ParcelMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM parcel
+        ORDER BY id DESC
+    </select>
+
+    <select id="existsByTrackingNo" resultType="boolean">
+        SELECT EXISTS(
+        SELECT 1 FROM parcel WHERE tracking_no = #{trackingNo}
+        )
+    </select>
+    <select id="searchByTrackingNo" resultMap="ParcelMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM parcel
+        <where>
+            <if test="keyword != null and keyword != ''">
+                tracking_no LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+    <select id="countByTrackingNo" resultType="int">
+        SELECT COUNT(1)
+        FROM parcel
+        WHERE tracking_no = #{trackingNo}
+    </select>
+    <select id="countAll" resultType="int">
+        SELECT COUNT(1) FROM parcel
+    </select>
+
+    <select id="countByTrackingNoLike" resultType="int">
+        SELECT COUNT(1)
+        FROM parcel
+        WHERE tracking_no LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="pageAll" resultMap="ParcelMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM parcel
+        ORDER BY id DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <select id="pageByTrackingNoLike" resultMap="ParcelMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM parcel
+        WHERE tracking_no LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY id DESC
+        LIMIT #{offset}, #{size}
+    </select>
+</mapper>

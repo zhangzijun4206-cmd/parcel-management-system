@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Parcel Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; }
+        .bar { display: flex; gap: 12px; align-items: center; margin: 12px 0 18px; }
+        .bar a { text-decoration: none; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #f6f6f6; }
+        .actions { display: flex; gap: 10px; align-items: center; }
+        .muted { color: #666; }
+        .btn { padding: 6px 10px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+        .btn-danger { border-color: #e3b1b1; }
+        .search input { padding: 6px 8px; width: 220px; }
+    </style>
+</head>
+<body>
+
+<h2>Parcel Management</h2>
+<div class="muted">
+    Total: <span th:text="${total}"></span>
+    | Page: <span th:text="${page}"></span>/<span th:text="${totalPages}"></span>
+</div>
+
+<div class="bar">
+    <a class="btn"
+       th:if="${hasPrev}"
+       th:href="@{/parcels(page=${page-1}, size=${size}, keyword=${keyword})}">Prev</a>
+
+    <a class="btn"
+       th:if="${hasNext}"
+       th:href="@{/parcels(page=${page+1}, size=${size}, keyword=${keyword})}">Next</a>
+</div>
+<div class="bar">
+    <a class="btn" th:href="@{/parcels/new}">Create New</a>
+
+    <form class="search" th:action="@{/parcels}" method="get" style="margin:0;">
+        <input name="keyword" placeholder="Search tracking no" th:value="${keyword}">
+        <button class="btn" type="submit">Search</button>
+        <a class="btn" th:href="@{/parcels}">Reset</a>
+    </form>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tracking No</th>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Status</th>
+        <th style="width: 160px;">Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:if="${#lists.isEmpty(parcels)}">
+        <td colspan="8" class="muted">No data. Click "Create New" to add one.</td>
+    </tr>
+
+    <tr th:each="p : ${parcels}">
+        <td th:text="${p.id}"></td>
+        <td th:text="${p.trackingNo}"></td>
+        <td th:text="${p.senderName}"></td>
+        <td th:text="${p.receiverName}"></td>
+        <td th:text="${p.receiverPhone}"></td>
+        <td th:text="${p.address}"></td>
+        <td th:text="${p.status}"></td>
+        <td>
+            <div class="actions">
+                <a class="btn" th:href="@{'/parcels/' + ${p.id} + '/edit'}">Edit</a>
+
+                <form th:action="@{'/parcels/' + ${p.id} + '/delete'}"
+                      method="post" style="margin:0;">
+                    <button class="btn btn-danger" type="submit"
+                            onclick="return confirm('Delete this parcel?');">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Parcel Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; }
+        .row { margin: 10px 0; }
+        label { display: inline-block; width: 120px; }
+        input, select { padding: 6px 8px; width: 280px; }
+        .btn { padding: 6px 10px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
+        .bar { margin-top: 14px; display: flex; gap: 10px; align-items: center; }
+        .error { color: #c00; margin: 10px 0; }
+        .muted { color: #666; }
+    </style>
+</head>
+<body>
+
+<h2 th:text="${parcel.id == null ? 'Create Parcel' : 'Edit Parcel'}"></h2>
+<div class="muted"><a th:href="@{/parcels}">Back to list</a></div>
+
+<div class="error" th:if="${error}" th:text="${error}"></div>
+
+<form th:action="${parcel.id == null} ? @{/parcels} : @{'/parcels/' + ${parcel.id}}"
+      method="post">
+
+    <div class="row">
+        <label>Tracking No</label>
+        <input name="trackingNo"
+               th:value="${parcel.trackingNo}"
+               th:readonly="${parcel.id != null}"
+               placeholder="e.g. T10001"/>
+    </div>
+
+    <div class="row">
+        <label>Sender Name</label>
+        <input name="senderName" th:value="${parcel.senderName}" />
+    </div>
+
+    <div class="row">
+        <label>Receiver Name</label>
+        <input name="receiverName" th:value="${parcel.receiverName}" />
+    </div>
+
+    <div class="row">
+        <label>Receiver Phone</label>
+        <input name="receiverPhone" th:value="${parcel.receiverPhone}" />
+    </div>
+
+    <div class="row">
+        <label>Address</label>
+        <input name="address" th:value="${parcel.address}" />
+    </div>
+
+    <div class="row">
+        <label>Status</label>
+        <select name="status">
+            <option th:each="s : ${statusList}"
+                    th:value="${s}"
+                    th:text="${s}"
+                    th:selected="${parcel.status == s}">
+            </option>
+        </select>
+    </div>
+
+    <div class="bar">
+        <button class="btn" type="submit">Save</button>
+        <a class="btn" th:href="@{/parcels}">Cancel</a>
+    </div>
+</form>
+
+</body>
+</html>
