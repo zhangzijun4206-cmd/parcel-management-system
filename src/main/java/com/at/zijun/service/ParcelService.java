@@ -5,7 +5,6 @@ import com.at.zijun.dto.PageResult;
 import com.at.zijun.mapper.ParcelMapper;
 import com.at.zijun.pojo.Parcel;
 import com.at.zijun.pojo.ParcelStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
