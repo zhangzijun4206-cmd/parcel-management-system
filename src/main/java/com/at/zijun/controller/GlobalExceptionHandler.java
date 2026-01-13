@@ -4,8 +4,6 @@ import com.at.zijun.common.BusinessException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
